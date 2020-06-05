@@ -30,8 +30,8 @@ public class DataSeedingTest {
     @Autowired
     private UserRepository userRepository;
 
-    //@Test
-    @Rollback(value = false)
+    @Test
+    //@Rollback(value = false)
     public void DataSeeder(){
 
         Faker faker= new Faker();
