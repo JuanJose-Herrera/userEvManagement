@@ -73,7 +73,6 @@ public class UserControllerTest {
                             .content(new ObjectMapper().writeValueAsString(baseUser)))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().string(""));
 
     }
