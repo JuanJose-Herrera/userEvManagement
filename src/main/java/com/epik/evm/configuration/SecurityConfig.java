@@ -7,6 +7,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /*
+        We can configure all about security from here, for the demo we need
+        disable all the security added by spring boot
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 

@@ -3,7 +3,9 @@ package com.epik.evm.endpoint;
 import com.epik.evm.dto.BaseUser;
 import com.epik.evm.dto.ReturnUser;
 import com.epik.evm.services.UserService;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -11,7 +13,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 
 @RestController()
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "UserController", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@SwaggerDefinition(tags = {
+        @Tag(name = "User", description = "Endpoints that help to create and retrieve users from the system")
+})
 public class UserController {
 
     private final UserService userService;
@@ -21,7 +27,10 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<ReturnUser> getUser(@PathVariable int userId){
+    @ApiOperation(value = "Get User by userId")
+    public ResponseEntity<ReturnUser> getUser(
+            @ApiParam(value = "The user id retrieved when is created", name = "User Id", required = true, example = "1")
+            @PathVariable int userId){
 
         final ReturnUser userById = this.userService.getUserById(userId);
         if(userById==null){
@@ -31,7 +40,9 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity<ReturnUser> createUser(@Valid @RequestBody BaseUser userDto,
+    @ApiOperation(value = "Create a new user resource")
+    public ResponseEntity<ReturnUser> createUser(
+            @ApiParam(required = true, name = "User", value = "The user resource to be created") @Valid @RequestBody BaseUser userDto,
                                                  UriComponentsBuilder uriBuilder){
         try{
 

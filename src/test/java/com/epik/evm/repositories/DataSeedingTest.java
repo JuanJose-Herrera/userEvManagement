@@ -30,7 +30,7 @@ public class DataSeedingTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+    //@Test
     @Rollback(value = false)
     public void DataSeeder(){
 

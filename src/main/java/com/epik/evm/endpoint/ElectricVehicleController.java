@@ -2,9 +2,10 @@ package com.epik.evm.endpoint;
 
 import com.epik.evm.dto.BaseElectricVehicle;
 import com.epik.evm.dto.ReturnElectricVehicle;
-import com.epik.evm.dto.ReturnUser;
 import com.epik.evm.services.ElectricVehicleService;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -13,17 +14,26 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController()
-@RequestMapping(value = "/user/{userId}/ve")
+@RequestMapping(value = "/user/{userId}/ev", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "ElectricVehicleController", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@SwaggerDefinition(tags = {
+        @Tag(name = "Electric Vehicle", description = "Endpoints that help to add an retrieve electric vehicles from an specific user")
+})
 public class ElectricVehicleController {
 
-    private ElectricVehicleService electricVehicleService;
+    private final  ElectricVehicleService electricVehicleService;
 
     public ElectricVehicleController(ElectricVehicleService electricVehicleService) {
         this.electricVehicleService = electricVehicleService;
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ReturnElectricVehicle>> getListOfEvs(@PathVariable int userId){
+    @ApiOperation(value = "Retrieve the list of electric vehicles for an specific user")
+    @ApiResponses( value ={
+            @ApiResponse(code = 404, message = "The user id was not found")
+    })
+    public ResponseEntity<List<ReturnElectricVehicle>> getListOfEvs(
+            @ApiParam(value = "The user id", required = true, name = "User Id", example = "1") @PathVariable int userId){
 
         final List<ReturnElectricVehicle> electricVehiclesByUserId = this.electricVehicleService.getElectricVehiclesByUserId(userId);
         if(electricVehiclesByUserId==null){
@@ -33,8 +43,13 @@ public class ElectricVehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<ReturnElectricVehicle> createEv(@PathVariable Long userId
-            , @Valid @RequestBody BaseElectricVehicle evDto
+    @ApiOperation(value = "Add an electric vehicle to a user")
+    @ApiResponses( value ={
+            @ApiResponse(code = 404, message = "The user id was not found")
+    })
+    public ResponseEntity<ReturnElectricVehicle> createEv(
+            @ApiParam(value = "The user id", required = true, name = "User Id", example = "1") @PathVariable Long userId
+            ,@ApiParam(value = "The Electric Vehicle", required = true, name = "Electric Vehicle") @Valid @RequestBody BaseElectricVehicle evDto
             , UriComponentsBuilder uriBuilder){
 
         try {
